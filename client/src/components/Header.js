@@ -12,15 +12,34 @@ const Header = () => {
   const [password, setPassword] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState(false);
   const { user, setUser } = useContext(UserContext);
   const { setMovies } = useContext(MovieContext);
   const navigate = useNavigate();
+
+  const validateEmail = (email) => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const handleEmailChange = (e) => {
+    setUsername(e.target.value);
+    if (!validateEmail(e.target.value)) {
+      setEmailError(true);
+    } else {
+      setEmailError(false);
+    }
+  };
 
   const handleLoginRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      if (!username || !password) {
+        throw new Error('Please enter username and password')
+      }
+
       let response;
 
       // Check if the user exists
@@ -97,8 +116,9 @@ const Header = () => {
                 label="Email"
                 value={username}
                 size="small"
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={handleEmailChange}
                 sx={{ fontSize: '0.8rem', marginRight: 1, flex: 1 }}
+                error={!!emailError}
               />
               <TextField
                 label="Password"
@@ -108,7 +128,7 @@ const Header = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 sx={{ fontSize: '0.8rem', marginRight: 1, flex: 1 }}
               />
-              <Button variant="outlined" color="inherit" type="submit" disabled={loading} sx={{ fontSize: '1rem', flex: 1 }}>
+              <Button variant="outlined" color="inherit" type="submit" disabled={loading || emailError || !password} sx={{ fontSize: '1rem', flex: 1 }}>
                 <Box sx={{ width: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                   {loading ? <CircularProgress size={20} /> : 'Login/Register'}
                 </Box>
