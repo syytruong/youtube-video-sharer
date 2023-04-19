@@ -1,7 +1,7 @@
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { UserProvider } from './context/UserContext';
 import Header from './components/Header';
-import ShareMovie from './components/ShareMovie';
+// import ShareMovie from './components/ShareMovie';
 import MovieList from './components/MovieList';
 
 function App() {
@@ -9,10 +9,10 @@ function App() {
     <UserProvider>
       <Router>
         <Header />
-        <Switch>
-          <Route path="/" exact component={MovieList} />
-          <Route path="/share" component={ShareMovie} />
-        </Switch>
+        <Routes>
+          <Route path="/" element={<MovieList />} />
+          {/* <Route path="/share" element={<ShareMovie />} /> */}
+        </Routes>
       </Router>
     </UserProvider>
   );
