@@ -7,6 +7,10 @@ const registerUser = async (req, res) => {
   try {
     const { username, password } = req.body;
 
+    if (!username || !password) {
+      return res.status(404).json({ message: 'Missing username or password' });
+    }
+
     const userExists = await User.findOne({ username });
 
     if (userExists) {
@@ -32,6 +36,10 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
+
+    if (!username || !password) {
+      return res.status(404).json({ message: 'Missing username or password' });
+    }
 
     const user = await User.findOne({ username });
 
