@@ -63,7 +63,7 @@ const Header = () => {
 
   return (
     <Fragment>
-      <AppBar position="static" sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
+      <AppBar position="static" sx={{ bgcolor: 'background.paper', color: 'text.primary', boxShadow: 'none', borderBottom: '2px solid black' }}>
         <Toolbar>
           <Home sx={{ fontSize: '3rem', marginRight: 1 }} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontSize: '2.5rem' }}>
@@ -72,29 +72,31 @@ const Header = () => {
           {user ? (
             <>
               <Typography variant="subtitle1">Welcome {user.username}</Typography>
-              <Button color="inherit" onClick={handleShareMovie} sx={{ fontSize: '1.5rem' }}>
+              <Button color="inherit" onClick={handleShareMovie} sx={{ fontSize: '1rem' }}>
                 Share a movie
               </Button>
-              <Button color="inherit" onClick={handleLogout} sx={{ fontSize: '1.5rem' }}>
+              <Button color="inherit" onClick={handleLogout} sx={{ fontSize: '1rem' }}>
                 Logout
               </Button>
             </>
           ) : (
             <Box component="form" onSubmit={handleLoginRegister} sx={{ display: 'flex !important', alignItems: 'center'}}>
               <TextField
-                label="Username"
+                label="Email"
                 value={username}
+                size="small"
                 onChange={(e) => setUsername(e.target.value)}
-                sx={{ fontSize: '1rem', marginRight: 1, flex: 1 }}
+                sx={{ fontSize: '0.8rem', marginRight: 1, flex: 1 }}
               />
               <TextField
                 label="Password"
                 type="password"
                 value={password}
+                size="small"
                 onChange={(e) => setPassword(e.target.value)}
-                sx={{ fontSize: '1rem', marginRight: 1, flex: 1 }}
+                sx={{ fontSize: '0.8rem', marginRight: 1, flex: 1 }}
               />
-              <Button variant="outlined" color="inherit" type="submit" sx={{ fontSize: '1.3rem', flex: 1 }}>
+              <Button variant="outlined" color="inherit" type="submit" sx={{ fontSize: '1rem', flex: 1 }}>
                 Login/Register
               </Button>
             </Box>
