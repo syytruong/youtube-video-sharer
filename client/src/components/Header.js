@@ -1,13 +1,16 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { UserContext } from '../context/UserContext';
-import { AppBar, Toolbar, Typography, Button, TextField, InputAdornment } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, TextField, Box } from '@mui/material';
 import { Home } from '@mui/icons-material';
+import ShareMoviePopup from './ShareMoviePopup';
 
 const Header = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const [youtubeUrl, setYoutubeUrl] = useState('');
   const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -45,48 +48,61 @@ const Header = () => {
   };
 
   const handleShareMovie = () => {
-    navigate('/share');
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
+  const handleShare = () => {
+    console.log(youtubeUrl);
+    setYoutubeUrl('');
+    setShowPopup(false);
   };
 
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <Home sx={{ marginRight: 1 }} />
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Funny Movies
-        </Typography>
-        {user ? (
-          <>
-            <Typography variant="subtitle1">Welcome {user.username}</Typography>
-            <Button color="inherit" onClick={handleShareMovie}>
-              Share a movie
-            </Button>
-            <Button color="inherit" onClick={handleLogout}>
-              Logout
-            </Button>
-          </>
-        ) : (
-          <form onSubmit={handleLoginRegister}>
-            <TextField
-              label="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              sx={{ marginRight: 1 }}
-            />
-            <TextField
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              sx={{ marginRight: 1 }}
-            />
-            <Button variant="outlined" color="inherit" type="submit">
-              Login/Register
-            </Button>
-          </form>
-        )}
-      </Toolbar>
-    </AppBar>
+    <Fragment>
+      <AppBar position="static" sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
+        <Toolbar>
+          <Home sx={{ fontSize: '3rem', marginRight: 1 }} />
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontSize: '2.5rem' }}>
+            Funny Movies
+          </Typography>
+          {user ? (
+            <>
+              <Typography variant="subtitle1">Welcome {user.username}</Typography>
+              <Button color="inherit" onClick={handleShareMovie} sx={{ fontSize: '1.5rem' }}>
+                Share a movie
+              </Button>
+              <Button color="inherit" onClick={handleLogout} sx={{ fontSize: '1.5rem' }}>
+                Logout
+              </Button>
+            </>
+          ) : (
+            <Box component="form" onSubmit={handleLoginRegister} sx={{ display: 'flex !important', alignItems: 'center'}}>
+              <TextField
+                label="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                sx={{ fontSize: '1rem', marginRight: 1, flex: 1 }}
+              />
+              <TextField
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                sx={{ fontSize: '1rem', marginRight: 1, flex: 1 }}
+              />
+              <Button variant="outlined" color="inherit" type="submit" sx={{ fontSize: '1.3rem', flex: 1 }}>
+                Login/Register
+              </Button>
+            </Box>
+          )}
+        </Toolbar>
+      </AppBar>
+      <ShareMoviePopup open={showPopup} onClose={handleClosePopup} onShare={handleShare} youtubeUrl={youtubeUrl} setYoutubeUrl={setYoutubeUrl} />
+    </Fragment>
   );
 };
 
