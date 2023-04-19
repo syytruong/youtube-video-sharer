@@ -1,9 +1,11 @@
 const express = require('express');
-const router = express.Router();
-const movieController = require('../controllers/movieController');
-const authMiddleware = require('../middlewares/authMiddleware');
+const { getMovies, createMovie, voteMovie } = require('../controllers/movieController');
+const { protect } = require('../middlewares/authMiddleware');
 
-router.post('/', authMiddleware, movieController.shareMovie);
-router.get('/', movieController.getMovies);
+const router = express.Router();
+
+router.route('/').get(getMovies).post(protect, createMovie);
+router.route('/create').post(protect, createMovie);
+router.route('/:id/vote').post(protect, voteMovie);
 
 module.exports = router;

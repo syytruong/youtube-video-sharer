@@ -2,6 +2,7 @@ import { useState, useContext, Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { UserContext } from '../context/UserContext';
+import { MovieContext } from '../context/MovieContext';
 import { AppBar, Toolbar, Typography, Button, TextField, Box } from '@mui/material';
 import { Home } from '@mui/icons-material';
 import ShareMoviePopup from './ShareMoviePopup';
@@ -10,8 +11,8 @@ const Header = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPopup, setShowPopup] = useState(false);
-  const [youtubeUrl, setYoutubeUrl] = useState('');
   const { user, setUser } = useContext(UserContext);
+  const { setMovies } = useContext(MovieContext);
   const navigate = useNavigate();
 
   const handleLoginRegister = async (e) => {
@@ -55,10 +56,19 @@ const Header = () => {
     setShowPopup(false);
   };
 
-  const handleShare = () => {
-    console.log(youtubeUrl);
-    setYoutubeUrl('');
-    setShowPopup(false);
+  const handleShare = async (youtubeUrl) => {
+    try {
+      const description = 'This is the default description';
+      const title = 'Movie Title';
+
+      console.log(user);
+      const newMovie = await axios.post('/api/movies', { youtubeUrl, description, title }, { headers: { Authorization: `Bearer ${user.token}` } });
+      setMovies((prevMovies) => [...prevMovies, newMovie.data]);
+      setShowPopup(false);
+      window.location.reload();
+    } catch (error) {
+      console.error('Movie creation failed:', error);
+    }
   };
 
   return (
@@ -103,7 +113,7 @@ const Header = () => {
           )}
         </Toolbar>
       </AppBar>
-      <ShareMoviePopup open={showPopup} onClose={handleClosePopup} onShare={handleShare} youtubeUrl={youtubeUrl} setYoutubeUrl={setYoutubeUrl} />
+      <ShareMoviePopup open={showPopup} onClose={handleClosePopup} onShare={handleShare}/>
     </Fragment>
   );
 };

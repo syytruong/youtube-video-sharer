@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/users');
-// const movieRoutes = require('./routes/movies');
+const movieRoutes = require('./routes/movies');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -24,7 +24,7 @@ mongoose.connect(uri, {
 
 // Routes
 app.use('/api/users', userRoutes);
-// app.use('/api/movies', movieRoutes);
+app.use('/api/movies', movieRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

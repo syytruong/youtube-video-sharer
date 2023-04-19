@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { TextField, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 
-const SharePopup = ({ open, onClose }) => {
+const SharePopup = ({ open, onClose, onShare }) => {
   const [youtubeUrl, setYoutubeUrl] = useState('');
 
   const handleShare = () => {
-    // onShare(youtubeUrl);
+    onShare(youtubeUrl);
     setYoutubeUrl('');
     onClose();
   };
