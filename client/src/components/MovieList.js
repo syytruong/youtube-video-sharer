@@ -36,10 +36,7 @@ const MovieList = () => {
   };
 
   return (
-    <Container maxWidth="md">
-      <Typography variant="h4" component="h1" align="center" gutterBottom>
-        Movie List
-      </Typography>
+    <Container maxWidth="md" sx={{ marginTop: 10 }}>
       {movies.map((movie) => (
         <MovieCard key={movie._id} movie={movie} user={user} handleVote={handleVote} />
       ))}

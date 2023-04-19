@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { UserContext } from '../context/UserContext';
 import { MovieContext } from '../context/MovieContext';
-import { AppBar, Toolbar, Typography, Button, TextField, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, TextField, Box, CircularProgress } from '@mui/material';
 import { Home } from '@mui/icons-material';
 import ShareMoviePopup from './ShareMoviePopup';
 
@@ -11,12 +11,14 @@ const Header = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPopup, setShowPopup] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { user, setUser } = useContext(UserContext);
   const { setMovies } = useContext(MovieContext);
   const navigate = useNavigate();
 
   const handleLoginRegister = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       let response;
@@ -39,6 +41,8 @@ const Header = () => {
       setPassword('');
     } catch (error) {
       console.error('Login/Register failed:', error);
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -60,8 +64,6 @@ const Header = () => {
     try {
       const description = 'This is the default description';
       const title = 'Movie Title';
-
-      console.log(user);
       const newMovie = await axios.post('/api/movies', { youtubeUrl, description, title }, { headers: { Authorization: `Bearer ${user.token}` } });
       setMovies((prevMovies) => [...prevMovies, newMovie.data]);
       setShowPopup(false);
@@ -80,7 +82,7 @@ const Header = () => {
             Funny Movies
           </Typography>
           {user ? (
-            <>
+            <Fragment>
               <Typography variant="subtitle1">Welcome {user.username}</Typography>
               <Button color="inherit" onClick={handleShareMovie} sx={{ fontSize: '1rem' }}>
                 Share a movie
@@ -88,7 +90,7 @@ const Header = () => {
               <Button color="inherit" onClick={handleLogout} sx={{ fontSize: '1rem' }}>
                 Logout
               </Button>
-            </>
+            </Fragment>
           ) : (
             <Box component="form" onSubmit={handleLoginRegister} sx={{ display: 'flex !important', alignItems: 'center'}}>
               <TextField
@@ -106,8 +108,10 @@ const Header = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 sx={{ fontSize: '0.8rem', marginRight: 1, flex: 1 }}
               />
-              <Button variant="outlined" color="inherit" type="submit" sx={{ fontSize: '1rem', flex: 1 }}>
-                Login/Register
+              <Button variant="outlined" color="inherit" type="submit" disabled={loading} sx={{ fontSize: '1rem', flex: 1 }}>
+                <Box sx={{ width: '100px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  {loading ? <CircularProgress size={20} /> : 'Login/Register'}
+                </Box>
               </Button>
             </Box>
           )}
