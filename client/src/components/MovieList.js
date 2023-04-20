@@ -3,9 +3,10 @@ import axios from 'axios';
 import { UserContext } from '../context/UserContext';
 import { Container } from '@mui/material';
 import MovieCard from './MovieCard';
+import { MovieContext } from '../context/MovieContext';
 
 const MovieList = () => {
-  const [movies, setMovies] = useState([]);
+  const { movies, setMovies } = useContext(MovieContext);
   const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
@@ -21,22 +22,6 @@ const MovieList = () => {
     fetchMovies();
   }, []);
 
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      if (user && user.token) {
-        try {
-          const response = await axios.get('/api/users/single', {
-            headers: { 'Authorization': `Bearer ${user.token}` },
-          });
-          setUser({ ...user, votedMovies: response.data.votedMovies });
-        } catch (error) {
-          console.error('Error fetching current user:', error);
-        }
-      }
-    };
-    fetchCurrentUser();
-  }, []);
-
   const handleVote = async (movieId, type) => {
     if (!user) return;
 
@@ -49,6 +34,8 @@ const MovieList = () => {
       console.error('Error voting:', error);
     }
   };
+
+  console.log(user)
 
   return (
     <Container maxWidth="md" sx={{ marginTop: 10 }}>

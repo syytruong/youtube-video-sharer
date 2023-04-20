@@ -54,8 +54,8 @@ const Header = () => {
         }
       }
 
-      setUser({ username, token: response.data.token });
-      localStorage.setItem('user', JSON.stringify({ username, token: response.data.token }));
+      setUser({ username, token: response.data.token, votedMovies: response.data.votedMovies });
+      localStorage.setItem('user', JSON.stringify({ username, token: response.data.token, votedMovies: response.data.votedMovies }));
       setUsername('');
       setPassword('');
     } catch (error) {
@@ -86,7 +86,6 @@ const Header = () => {
       const newMovie = await axios.post('/api/movies', { youtubeUrl, description, title }, { headers: { Authorization: `Bearer ${user.token}` } });
       setMovies((prevMovies) => [...prevMovies, newMovie.data]);
       setShowPopup(false);
-      window.location.reload();
     } catch (error) {
       console.error('Movie creation failed:', error);
     }

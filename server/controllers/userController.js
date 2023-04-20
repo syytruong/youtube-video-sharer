@@ -74,6 +74,7 @@ const loginUser = async (req, res) => {
     res.status(200).json({
       _id: user._id,
       username: user.username,
+      votedMovies: user.votedMovies,
       token: jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' }),
     });
   } catch (error) {
@@ -82,33 +83,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-/**
- * getCurrentUser - Fetch the current user's information, excluding the password.
- * This function is a protected route that requires the user to be authenticated.
- * 
- * @function
- * @async
- * @throws {Error} - Will throw an error if the user is not found
- * @returns {void} - Sends a JSON response containing the user's information
- */
-const getCurrentUser = async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id).select('-password');
-
-    if (!user) {
-      res.status(404);
-      throw new Error('User not found');
-    }
-
-    res.status(200).json(user);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error getUser' });
-  }
-}
-
 module.exports = {
   registerUser,
   loginUser,
-  getCurrentUser,
 };
