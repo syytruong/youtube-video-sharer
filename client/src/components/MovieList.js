@@ -28,7 +28,6 @@ const MovieList = () => {
           const response = await axios.get('/api/users/single', {
             headers: { 'Authorization': `Bearer ${user.token}` },
           });
-          console.log('res:', response.data);
           setUser({ ...user, votedMovies: response.data.votedMovies });
         } catch (error) {
           console.error('Error fetching current user:', error);
@@ -54,7 +53,13 @@ const MovieList = () => {
   return (
     <Container maxWidth="md" sx={{ marginTop: 10 }}>
       {movies.map((movie) => (
-        <MovieCard key={movie._id} movie={movie} user={user} handleVote={handleVote} />
+        <MovieCard
+          key={movie._id}
+          movie={movie}
+          user={user}
+          handleVote={handleVote}
+          dataTestId={`movie-${movie._id}`}
+        />
       ))}
     </Container>
   );

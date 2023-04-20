@@ -4,7 +4,7 @@ import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import { ThumbUp, ThumbDown } from '@mui/icons-material';
 
-const MovieCard = ({ movie, user, handleVote }) => {
+const MovieCard = ({ movie, user, handleVote, dataTestId }) => {
   const [isVoting, setIsVoting] = useState(false);
 
   const handleButtonClick = async (movieId, type) => {
@@ -15,7 +15,7 @@ const MovieCard = ({ movie, user, handleVote }) => {
   };
 
   return (
-    <Card key={movie._id} sx={{ marginBottom: 2 }}>
+    <Card key={movie._id} sx={{ marginBottom: 2 }} data-testid={dataTestId}>
       <Grid container>
         <Grid item xs={12} sm={6}>
           <iframe
@@ -45,6 +45,7 @@ const MovieCard = ({ movie, user, handleVote }) => {
                     startIcon={user.votedMovies?.[movie._id] ? <ThumbUp /> : <ThumbUpOffAltIcon />}
                     sx={user.votedMovies?.[movie._id] === 'upVotes' ? { fontWeight: 'bold', ml: 1 } : { ml: 1 }}
                     disabled={user.votedMovies?.[movie._id] === 'upVotes' || isVoting}
+                    data-testid={`upvote-button-${movie._id}`}
                   />
                 )}
                 {user.votedMovies?.[movie._id] !== 'upVotes' && (
@@ -54,6 +55,7 @@ const MovieCard = ({ movie, user, handleVote }) => {
                     startIcon={user.votedMovies?.[movie._id] ? <ThumbDown /> : <ThumbDownOffAltIcon />}
                     sx={user.votedMovies?.[movie._id] === 'downVotes' ? { fontWeight: 'bold' } : {}}
                     disabled={user.votedMovies?.[movie._id] === 'downVotes' || isVoting}
+                    data-testid={`down-button-${movie._id}`}
                   />
                 )}
               </Fragment>
