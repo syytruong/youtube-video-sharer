@@ -19,7 +19,7 @@ const user = {
 const handleVote = jest.fn();
 
 describe('MovieCard', () => {
-  it('renders the movie card correctly', () => {
+  test('renders the movie card correctly', () => {
     render(<MovieCard movie={movie} user={user} handleVote={handleVote} dataTestId="movie-card" />);
 
     expect(screen.getByTestId('movie-card')).toBeInTheDocument();
@@ -29,7 +29,7 @@ describe('MovieCard', () => {
     expect(screen.getByTestId('down-button-1')).toBeInTheDocument();
   });
 
-  it('handles button clicks', async () => {
+  test('handles button clicks', async () => {
     render(<MovieCard movie={movie} user={user} handleVote={handleVote} dataTestId="movie-card" />);
 
     await act(async () => {

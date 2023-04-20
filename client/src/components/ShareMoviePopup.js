@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { TextField, Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 
-const SharePopup = ({ open, onClose, onShare }) => {
+const ShareMoviePopup = ({ open, onClose, onShare }) => {
   const [youtubeUrl, setYoutubeUrl] = useState('');
 
   const handleShare = () => {
@@ -30,4 +30,4 @@ const SharePopup = ({ open, onClose, onShare }) => {
   );
 };
 
-export default SharePopup;
+export default ShareMoviePopup;
