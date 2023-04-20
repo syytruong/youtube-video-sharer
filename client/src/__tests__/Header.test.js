@@ -21,13 +21,13 @@ describe('Header', () => {
     );
   };
 
-  it('renders the app title', () => {
+  test('renders the app title', () => {
     renderHeader(null, () => {}, () => {});
 
     expect(screen.getByText('Funny Movies')).toBeInTheDocument();
   });
 
-  it('shows login/register form when the user is not logged in', () => {
+  test('shows login/register form when the user is not logged in', () => {
     renderHeader(null, () => {}, () => {});
 
     expect(screen.getByLabelText('Email')).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('Header', () => {
     expect(screen.getByText('Login/Register')).toBeInTheDocument();
   });
 
-  it('shows username, share a movie and logout buttons when the user is logged in', () => {
+  test('shows username, share a movie and logout buttons when the user is logged in', () => {
     const user = { username: 'testUser', token: 'testToken' };
 
     renderHeader(user, () => {}, () => {});
@@ -45,7 +45,7 @@ describe('Header', () => {
     expect(screen.getByText('Logout')).toBeInTheDocument();
   });
 
-  it('logs in the user when the user exists', async () => {
+  test('logs in the user when the user exists', async () => {
     const setUser = jest.fn();
     const setMovies = jest.fn();
     renderHeader(null, setUser, setMovies);
@@ -71,7 +71,7 @@ describe('Header', () => {
     });
   });  
 
-  it('registers and logs in the user when the user does not exist', async () => {
+  test('registers and logs in the user when the user does not exist', async () => {
     const setUser = jest.fn();
     renderHeader(null, setUser, () => {});
 
