@@ -1,6 +1,6 @@
 /* eslint-disable testing-library/no-unnecessary-act */
 import { render, fireEvent, screen, act } from '@testing-library/react';
-import MovieCard from '../components/MovieCard';
+import MovieCard from '../../components/MovieCard';
 
 const movie = {
   _id: '1',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render as rtlRender, fireEvent, screen, within } from '@testing-library/react';
-import ShareMoviePopup from '../components/ShareMoviePopup';
+import ShareMoviePopup from '../../components/ShareMoviePopup';
 
 function render(ui, { onClose, onShare, ...renderOptions } = {}) {
   const handleClose = onClose || jest.fn();

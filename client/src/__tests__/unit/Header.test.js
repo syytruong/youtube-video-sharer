@@ -2,9 +2,9 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
-import { UserContext } from '../context/UserContext';
-import { MovieContext } from '../context/MovieContext';
-import Header from '../components/Header';
+import { UserContext } from '../../context/UserContext';
+import { MovieContext } from '../../context/MovieContext';
+import Header from '../../components/Header';
 
 jest.mock('axios');
 
