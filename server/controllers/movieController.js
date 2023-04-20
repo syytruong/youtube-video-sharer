@@ -40,12 +40,14 @@ const createMovie = async (req, res) => {
     const { _id } = req.user;
 
     // Check if the user exists
-    const user = await User.findById(_id);
+    const user = await User.findById(_id).select('-password -__v');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
     const movie = await Movie.create({ youtubeUrl, user: user._id, description, title });
+
+    movie._doc.user = user
 
     res.status(201).json(movie);
   } catch (error) {
