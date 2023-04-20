@@ -1,10 +1,19 @@
-import { Fragment } from 'react';
+import { useState, Fragment } from 'react';
 import { Button, Card, CardContent, Typography, Grid } from '@mui/material';
 import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import { ThumbUp, ThumbDown } from '@mui/icons-material';
 
 const MovieCard = ({ movie, user, handleVote }) => {
+  const [isVoting, setIsVoting] = useState(false);
+
+  const handleButtonClick = async (movieId, type) => {
+    if (isVoting) return;
+    setIsVoting(true);
+    await handleVote(movieId, type);
+    setIsVoting(false);
+  };
+
   return (
     <Card key={movie._id} sx={{ marginBottom: 2 }}>
       <Grid container>
@@ -32,19 +41,19 @@ const MovieCard = ({ movie, user, handleVote }) => {
                 {user.votedMovies?.[movie._id] !== 'downVotes' && (
                   <Button
                     size="small"
-                    onClick={() => handleVote(movie._id, 'upVotes')}
+                    onClick={() => handleButtonClick(movie._id, 'upVotes')}
                     startIcon={user.votedMovies?.[movie._id] ? <ThumbUp /> : <ThumbUpOffAltIcon />}
                     sx={user.votedMovies?.[movie._id] === 'upVotes' ? { fontWeight: 'bold', ml: 1 } : { ml: 1 }}
-                    disabled={user.votedMovies?.[movie._id] === 'upVotes'}
+                    disabled={user.votedMovies?.[movie._id] === 'upVotes' || isVoting}
                   />
                 )}
                 {user.votedMovies?.[movie._id] !== 'upVotes' && (
                   <Button
                     size="small"
-                    onClick={() => handleVote(movie._id, 'downVotes')}
+                    onClick={() => handleButtonClick(movie._id, 'downVotes')}
                     startIcon={user.votedMovies?.[movie._id] ? <ThumbDown /> : <ThumbDownOffAltIcon />}
                     sx={user.votedMovies?.[movie._id] === 'downVotes' ? { fontWeight: 'bold' } : {}}
-                    disabled={user.votedMovies?.[movie._id] === 'downVotes'}
+                    disabled={user.votedMovies?.[movie._id] === 'downVotes' || isVoting}
                   />
                 )}
               </Fragment>

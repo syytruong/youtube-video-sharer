@@ -42,9 +42,10 @@ const MovieList = () => {
     if (!user) return;
 
     try {
-      await axios.post(`/api/movies/${movieId}/vote`, { type }, { headers: { 'Authorization': `Bearer ${user.token}` } });
+      const response = await axios.post(`/api/movies/${movieId}/vote`, { type }, { headers: { 'Authorization': `Bearer ${user.token}` } });
 
       setMovies(movies.map(movie => movie._id === movieId ? { ...movie, [type]: movie[type] + 1 } : movie));
+      setUser({ ...user, votedMovies: response.data.votedMovies });
     } catch (error) {
       console.error('Error voting:', error);
     }
