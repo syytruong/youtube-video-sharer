@@ -2,7 +2,16 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// Handle user registration
+/**
+ * registerUser - Registers a new user with the given username and password.
+ * 
+ * @function
+ * @async
+ * @param {string} req.body.username - The username provided by the user
+ * @param {string} req.body.password - The password provided by the user
+ * @throws {Error} - Will throw an error if there's an issue during registration
+ * @returns {void} - Sends a JSON response containing the user's ID, username, and JWT token
+ */
 const registerUser = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -28,11 +37,20 @@ const registerUser = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error registerUser' });
   }
 };
 
-// Handle user login
+/**
+ * loginUser - Authenticates a user with the given username and password.
+ * 
+ * @function
+ * @async
+ * @param {string} req.body.username - The username provided by the user
+ * @param {string} req.body.password - The password provided by the user
+ * @throws {Error} - Will throw an error if there's an issue during authentication
+ * @returns {void} - Sends a JSON response containing the user's ID, username, and JWT token
+ */
 const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -60,11 +78,37 @@ const loginUser = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Error loginUser' });
   }
 };
+
+/**
+ * getCurrentUser - Fetch the current user's information, excluding the password.
+ * This function is a protected route that requires the user to be authenticated.
+ * 
+ * @function
+ * @async
+ * @throws {Error} - Will throw an error if the user is not found
+ * @returns {void} - Sends a JSON response containing the user's information
+ */
+const getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('-password');
+
+    if (!user) {
+      res.status(404);
+      throw new Error('User not found');
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error getUser' });
+  }
+}
 
 module.exports = {
   registerUser,
   loginUser,
+  getCurrentUser,
 };
