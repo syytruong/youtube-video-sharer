@@ -13,12 +13,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    votedMovies: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Movie',
-      },
-    ],
+    votedMovies: {
+      type: Map,
+      of: String,
+      default: {},
+    },
   },
   {
     timestamps: true,

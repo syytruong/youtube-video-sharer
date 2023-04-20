@@ -57,30 +57,19 @@ const voteMovie = asyncHandler(async (req, res) => {
 
   const user = await User.findById(userId);
   const currentVote = user.votedMovies.get(movieId);
-  let updatedVote;
-
-  if (currentVote === type) {
-    // Remove the vote
-    user.votedMovies.delete(movieId);
-    movie[type] -= 1;
-    updatedVote = null;
+  
+  if (currentVote) {
+    res.status(400);
+    throw new Error('User has already voted/unvoted for this movie');
   } else {
-    // Add or update the vote
+    // Add the vote
     user.votedMovies.set(movieId, type);
     movie[type] += 1;
+    await user.save();
+    await movie.save();
 
-    if (currentVote) {
-      // If the user previously voted the other type, decrease that count
-      movie[currentVote === 'upVotes' ? 'downVotes' : 'upVotes'] -= 1;
-    }
-
-    updatedVote = type;
+    res.status(200).json({ success: true, movie, updatedVote: type });
   }
-
-  await user.save();
-  await movie.save();
-
-  res.status(200).json({ success: true, movie, updatedVote });
 });
 
 module.exports = { getMovies, createMovie, voteMovie };
