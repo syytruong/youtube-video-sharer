@@ -6,7 +6,7 @@ const userRoutes = require('./routes/users');
 const movieRoutes = require('./routes/movies');
 
 const app = express();
-const PORT = process.env.NODE_ENV === 'test' ? 8082 : process.env.PORT || 5002;
+const PORT = process.env.PORT || 5002;
 
 // Middleware
 app.use(express.json());
@@ -34,7 +34,7 @@ const startServer = (customPort) => {
   return server;
 };
 
-if (!process.env.NODE_ENV === 'test') {
+if (process.env.NODE_ENV !== 'test') {
   startServer();
 }
 
