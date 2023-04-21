@@ -1,4 +1,3 @@
-const asyncHandler = require('express-async-handler');
 const Movie = require('../models/Movie');
 const User = require('../models/User');
 
@@ -68,37 +67,43 @@ const createMovie = async (req, res) => {
  * @throws {Error} - Will throw an error if the movie is not found, the vote type is invalid, or the user has already voted/unvoted for the movie
  * @returns {void} - Sends a JSON response containing the updated movie, updated vote, and the user's votedMovies
  */
-const voteMovie = asyncHandler(async (req, res) => {
-  const movieId = req.params.id;
-  const userId = req.user._id;
-  const { type } = req.body;
+const voteMovie = async (req, res) => {
+  try {
+    const movieId = req.params.id;
+    const userId = req.user._id;
+    const { type } = req.body;
 
-  if (!['upVotes', 'downVotes'].includes(type)) {
-    res.status(400);
-    throw new Error('Invalid vote type');
+    if (!['upVotes', 'downVotes'].includes(type)) {
+      res.status(400).json({ message: 'Invalid vote type' });
+      return;
+    }
+
+    const movie = await Movie.findById(movieId);
+    if (!movie) {
+      res.status(404).json({ message: 'Movie not found' });
+      return;
+    }
+
+    const user = await User.findById(userId);
+    const currentVote = user.votedMovies.get(movieId);
+
+    if (currentVote) {
+      res.status(400).json({ message: 'User has already voted/unvoted for this movie' });
+      return;
+    } else {
+      // Add the vote
+      user.votedMovies.set(movieId, type);
+      movie[type] += 1;
+      await user.save();
+      await movie.save();
+
+      res.status(200).json({ success: true, movie, updatedVote: type, votedMovies: user.votedMovies });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
   }
+};
 
-  const movie = await Movie.findById(movieId);
-  if (!movie) {
-    res.status(404);
-    throw new Error('Movie not found');
-  }
-
-  const user = await User.findById(userId);
-  const currentVote = user.votedMovies.get(movieId);
-  
-  if (currentVote) {
-    res.status(400);
-    throw new Error('User has already voted/unvoted for this movie');
-  } else {
-    // Add the vote
-    user.votedMovies.set(movieId, type);
-    movie[type] += 1;
-    await user.save();
-    await movie.save();
-
-    res.status(200).json({ success: true, movie, updatedVote: type, votedMovies: user.votedMovies });
-  }
-});
 
 module.exports = { getMovies, createMovie, voteMovie };
