@@ -63,16 +63,16 @@ npm run start
 3. Open your browser and navigate to http://localhost:3000.
 
 ## Built With
-React
-Express
-Node.js
-MongoDB
-Mongoose
-Material-UI
-Axios
-bcryptjs
-jsonwebtoken
-Jest
+ - React
+ - Express
+ - Node.js
+ - MongoDB
+ - Mongoose
+ - Material-UI
+ - Axios
+ - bcryptjs
+ - jsonwebtoken
+ - Jest
 
 ## License
 This project is licensed under the MIT License.
