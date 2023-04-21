@@ -4,7 +4,7 @@ const { protect } = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
-router.route('/').get(getMovies).post(protect, createMovie);
+router.route('/').get(getMovies)
 router.route('/create').post(protect, createMovie);
 router.route('/:id/vote').post(protect, voteMovie);
 

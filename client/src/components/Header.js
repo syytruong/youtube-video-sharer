@@ -83,7 +83,7 @@ const Header = () => {
     try {
       const description = 'This is the default description';
       const title = 'Movie Title';
-      const newMovie = await axios.post('/api/movies', { youtubeUrl, description, title }, { headers: { Authorization: `Bearer ${user.token}` } });
+      const newMovie = await axios.post('/api/movies/create', { youtubeUrl, description, title }, { headers: { Authorization: `Bearer ${user.token}` } });
       setMovies((prevMovies) => [...prevMovies, newMovie.data]);
       setShowPopup(false);
     } catch (error) {
