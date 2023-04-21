@@ -34,4 +34,4 @@ const startServer = (customPort) => {
   return server;
 };
 
-module.exports = startServer;
+startServer();
