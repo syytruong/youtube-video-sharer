@@ -1,46 +1,48 @@
-/* eslint-disable testing-library/no-unnecessary-act */
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { UserContext } from '../../context/UserContext';
+import { MovieContext } from '../../context/MovieContext';
 import axios from 'axios';
 import MovieList from '../../components/MovieList';
 
 jest.mock('axios');
 
+const moviesData = [
+  {
+    _id: '1',
+    title: 'Funny Movie 1',
+    youtubeUrl: 'https://www.youtube.com/watch?v=abc123',
+    upVotes: 0,
+    downVotes: 0,
+  },
+  {
+    _id: '2',
+    title: 'Funny Movie 2',
+    youtubeUrl: 'https://www.youtube.com/watch?v=def456',
+    upVotes: 0,
+    downVotes: 0,
+  },
+];
+
 describe('MovieList', () => {
-  const renderMovieList = (user, setUser) => {
+  const renderMovieList = (user, setUser, setMovies) => {
     return render(
       <UserContext.Provider value={{ user, setUser }}>
-        <MovieList />
+        <MovieContext.Provider value={{ movies: moviesData, setMovies }}>
+          <MovieList />
+        </MovieContext.Provider>
       </UserContext.Provider>
     );
   };
 
   test('renders movie list and fetches movies', async () => {
-    const moviesData = [
-      {
-        _id: '1',
-        title: 'Funny Movie 1',
-        youtubeUrl: 'https://www.youtube.com/watch?v=abc123',
-        upvote: 0,
-        downvote: 0,
-      },
-      {
-        _id: '2',
-        title: 'Funny Movie 2',
-        youtubeUrl: 'https://www.youtube.com/watch?v=def456',
-        upvote: 0,
-        downvote: 0,
-      },
-    ];
-
     axios.get.mockResolvedValueOnce({ data: moviesData });
 
-    renderMovieList(null, () => {});
+    renderMovieList(null, () => {}, () => {});
 
     await waitFor(() => {
       expect(axios.get).toHaveBeenCalledTimes(1);
-    });  
+    });
 
     expect(await screen.findByTestId('movie-1')).toBeInTheDocument();
     expect(await screen.findByTestId('movie-2')).toBeInTheDocument();
@@ -49,37 +51,20 @@ describe('MovieList', () => {
   test('handles voting', async () => {
     const user = { username: 'testUser', token: 'testToken', votedMovies: {} };
     const setUser = jest.fn();
-  
-    const moviesData = [
-      {
-        _id: '1',
-        title: 'Funny Movie 1',
-        youtubeUrl: 'https://www.youtube.com/watch?v=12345',
-        upvote: 5,
-        downvote: 3,
-      },
-    ];
+    const setMovies = jest.fn();
   
     axios.get.mockResolvedValueOnce({ data: moviesData });
-    axios.get.mockResolvedValueOnce({ data: { votedMovies: {} } });
     axios.post.mockResolvedValueOnce({
       data: { votedMovies: { '1': 'upVotes' } },
     });
   
-    renderMovieList(user, setUser);
-
+    renderMovieList(user, setUser, setMovies);
+  
     const upvoteButton = await screen.findByTestId('upvote-button-1');
-
-    await act(async () => {
-      fireEvent.click(upvoteButton);
-    });
-
+  
+    fireEvent.click(upvoteButton);
+  
     await waitFor(() => expect(axios.post).toHaveBeenCalledTimes(1));
-
-    expect(setUser).toHaveBeenCalledWith({
-      ...user,
-      votedMovies: { '1': 'upVotes' },
-    });
   
     expect(axios.post).toHaveBeenCalledWith(
       '/api/movies/1/vote',
@@ -87,9 +72,10 @@ describe('MovieList', () => {
       { headers: { Authorization: 'Bearer testToken' } }
     );
   
-    expect(setUser).toHaveBeenCalledWith({
+    await waitFor(() => expect(setUser).toHaveBeenCalledWith({
       ...user,
       votedMovies: { '1': 'upVotes' },
-    });
-  });  
+    }));
+  });
 });
+
