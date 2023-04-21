@@ -1,10 +1,10 @@
 process.env.NODE_ENV = 'test';
 const request = require('supertest');
-const startServer = require('../../index');
+const startServer = require('../index');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongoose = require('mongoose');
-const Movie = require('../../models/Movie');
-const User = require('../../models/User');
+const Movie = require('../models/Movie');
+const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
 let mongoServer;
