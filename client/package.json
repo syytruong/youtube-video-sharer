@@ -49,5 +49,6 @@
     "babel-jest": "^29.5.0",
     "jest": "^29.5.0",
     "jest-mock-axios": "^4.7.1"
-  }
+  },
+  "proxy": "http://localhost:5001"
 }
