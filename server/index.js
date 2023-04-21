@@ -6,7 +6,7 @@ const userRoutes = require('./routes/users');
 const movieRoutes = require('./routes/movies');
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.NODE_ENV === 'test' ? 8082 : process.env.PORT || 5002;
 
 // Middleware
 app.use(express.json());
@@ -26,6 +26,12 @@ mongoose.connect(uri, {
 app.use('/api/users', userRoutes);
 app.use('/api/movies', movieRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const startServer = (customPort) => {
+  const serverPort = customPort || PORT;
+  const server = app.listen(serverPort, () => {
+    console.log(`Server is running on port ${serverPort}`);
+  });
+  return server;
+};
+
+module.exports = startServer;
